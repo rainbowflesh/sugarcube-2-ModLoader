@@ -32,7 +32,42 @@ export class CacheRecord<T extends { name: string, content: string }> {
         public log: LogWrapper,
         public dataSource: string,
         public cacheRecordName: string,
+        public needBuildNoPathCache: boolean = false,
     ) {
+    }
+
+    getNoPathNameFromString(s: string) {
+        // get file name `error.js` from `game\\00-framework-tools\\01-error\\error.js` like string
+        const path = s.split(/(\\|\/)/g);
+        if (path.length < 2) {
+            return s;
+        }
+        return path[path.length - 1];
+    }
+
+    noPathCache?: Map<string, string[]> = new Map<string, string[]>();
+
+    buildNoPathCache() {
+        if (!this.needBuildNoPathCache) {
+            this.noPathCache = undefined;
+            return;
+        }
+        this.noPathCache = new Map<string, string[]>();
+        for (const k of this.map.keys()) {
+            const kk = this.getNoPathNameFromString(k);
+            if (!this.noPathCache.has(kk)) {
+                this.noPathCache.set(kk, [k]);
+            } else {
+                this.noPathCache.get(kk)!.push(k);
+            }
+        }
+        // check noPathCache no duplicate
+        for (const [k, v] of this.noPathCache) {
+            if (v.length > 1) {
+                console.warn('CacheRecord.buildNoPathCache() has duplicate name:', k, v);
+                this.log.warn(`CacheRecord.buildNoPathCache() has duplicate name: [${k}] [${v.join('], [')}]`);
+            }
+        }
     }
 
     clean() {
@@ -41,6 +76,7 @@ export class CacheRecord<T extends { name: string, content: string }> {
         this.noName = [];
         this.dataSource = '';
         this.cacheRecordName = '';
+        this.buildNoPathCache();
     }
 
     items: T[] = [];
@@ -62,6 +98,7 @@ export class CacheRecord<T extends { name: string, content: string }> {
                 this.noName.push(item);
             }
         }
+        this.buildNoPathCache();
     }
 
     back2Array() {
@@ -94,6 +131,7 @@ export class CacheRecord<T extends { name: string, content: string }> {
         this.items = Array.from(this.map.values()).concat(this.noName);
         // console.log('CacheRecord.replaceMerge() end this.items', this.items.length);
         // console.log('CacheRecord.replaceMerge() end this.map.size', this.map.size);
+        this.buildNoPathCache();
     }
 
     concatMerge(c: CacheRecord<T>) {
@@ -107,6 +145,12 @@ export class CacheRecord<T extends { name: string, content: string }> {
         }
         this.noName = this.noName.concat(c.noName);
         this.items = Array.from(this.map.values()).concat(this.noName);
+        this.buildNoPathCache();
+    }
+
+    public getByNameWithNoPath(s: string): T | undefined {
+        const orgS = this.noPathCache?.get(s) ?? [s];
+        return this.map.get(orgS[0]);
     }
 
 }
