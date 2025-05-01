@@ -6,7 +6,7 @@ import {PassageDataItem, SC2DataInfo, SC2DataInfoCache} from "./SC2DataInfoCache
 import {SimulateMergeResult} from "./SimulateMerge";
 import {replaceMergeSC2DataInfoCache, replaceMergeSC2DataInfoCacheForce} from "./MergeSC2DataInfoCache";
 import JSZip from "jszip";
-import {ModInfo, ModLoader} from "./ModLoader";
+import {ModBootJsonAddonPlugin, ModInfo, ModLoader} from "./ModLoader";
 import {LogWrapper, ModLoadController} from "./ModLoadController";
 import {AddonPluginManager} from "./AddonPlugin";
 import {SemVerToolsType} from "./SemVer/InfiniteSemVer";
@@ -27,7 +27,7 @@ import {ModLoadFromSourceType} from "./ModOrderContainer";
 export class ModUtils {
 
     get version(): string {
-        return '2.31.0';
+        return '2.31.1';
     }
 
     constructor(
@@ -445,6 +445,20 @@ export class ModUtils {
 
     getIdbRef() {
         return new IdbRef();
+    }
+
+    /**
+     *
+     * const modAddonPluginsParams = window.modUtils.getAddonParamsFromModInfo(modInfo, 'BeautySelectorAddon', 'BeautySelectorAddon');
+     *
+     * @param modInfo   params 2 of registerMod callback
+     * @param addonPluginModName params 1 of registerAddonPlugin
+     * @param addonName  params 2 of registerAddonPlugin
+     */
+    getAddonParamsFromModInfo<P>(modInfo: ModInfo, addonPluginModName: string, addonName: string): P | undefined;
+    getAddonParamsFromModInfo(modInfo: ModInfo, addonPluginModName: string, addonName: string): ModBootJsonAddonPlugin['params'] | undefined ;
+    getAddonParamsFromModInfo<P extends any>(modInfo: ModInfo, addonPluginModName: string, addonName: string): P | ModBootJsonAddonPlugin['params'] | undefined {
+        return modInfo?.bootJson?.addonPlugin?.find(T => T.modName === addonPluginModName && T.addonName === addonName)?.params;
     }
 
 }
