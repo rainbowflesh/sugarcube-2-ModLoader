@@ -1,32 +1,31 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-const path = require('path');
+const path = require("path");
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const isProduction = process.env.NODE_ENV == 'production';
-
+const isProduction = process.env.NODE_ENV == "production";
 
 // const stylesHandler = 'style-loader';
 
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 // const ZipPlugin = require('zip-webpack-plugin');
 
 const config = {
   // https://webpack.js.org/configuration/entry-context/#entry
   entry: {
-    BeforeSC2: './src/BeforeSC2/init.ts',
-    polyfillWebpack: './src/BeforeSC2/polyfill.ts',
+    BeforeSC2: "./src/BeforeSC2/init.ts",
+    polyfillWebpack: "./src/BeforeSC2/polyfill.ts",
   },
   output: {
-    path: path.resolve(__dirname, 'dist-BeforeSC2'),
-    filename: '[name].js',
+    path: path.resolve(__dirname, "dist/sugarcube2-modloader/BeforeSC2"),
+    filename: "[name].js",
   },
   // https://webpack.js.org/configuration/devtool/
   // devtool: 'inline-source-map',
   // https://webpack.js.org/configuration/target/
-  target: 'web',
+  target: "web",
   // target: 'node',
 
   // devServer: {
@@ -35,7 +34,6 @@ const config = {
   //   port: 3000,
   // },
   plugins: [
-
     //      INFO: generate a html entry from the template
     // new HtmlWebpackPlugin({
     //   template: 'src/web/1.html',
@@ -44,8 +42,8 @@ const config = {
     //      INFO: run Ts Check in parallel, [use special tsconfig]
     new ForkTsCheckerWebpackPlugin({
       typescript: {
-        configFile: 'src/BeforeSC2/tsconfig.json',
-      }
+        configFile: "src/BeforeSC2/tsconfig.json",
+      },
     }),
 
     // // https://www.npmjs.com/package/zip-webpack-plugin
@@ -75,8 +73,8 @@ const config = {
     rules: [
       {
         test: /\.(ts|tsx)$/i,
-        loader: 'ts-loader',
-        exclude: ['/node_modules/'],
+        loader: "ts-loader",
+        exclude: ["/node_modules/"],
       },
       // {
       //   test: /\.css$/i,
@@ -88,7 +86,7 @@ const config = {
       // },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: 'asset',
+        type: "asset",
       },
 
       // Add your rules for custom modules here
@@ -96,11 +94,13 @@ const config = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+    extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
     //      INFO: set a special tsconfig if you have multi, otherwise 'ts-loader' will read default from root dir
-    plugins: [new TsconfigPathsPlugin({
-      configFile: 'src/BeforeSC2/tsconfig.json'
-    })],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: "src/BeforeSC2/tsconfig.json",
+      }),
+    ],
 
     //      INFO: set some UMD lib to special js file, can skip webpack importer check
     // alias: {
@@ -109,16 +109,14 @@ const config = {
   },
 };
 
-
 module.exports = () => {
   if (isProduction) {
-    config.mode = 'production';
+    config.mode = "production";
 
     //      INFO: add some special config or operate to the config
     config.devtool = undefined;
-
   } else {
-    config.mode = 'development';
+    config.mode = "development";
   }
   return config;
 };

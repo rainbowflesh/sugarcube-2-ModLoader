@@ -34,21 +34,21 @@
 // declare var FinalizationRegistry: FinalizationRegistryConstructor;
 
 class FinalizationRegistryMock<T> implements FinalizationRegistry<T> {
-    readonly [Symbol.toStringTag] = "FinalizationRegistry";
+  readonly [Symbol.toStringTag] = "FinalizationRegistry";
 
-    register(target: WeakKey, heldValue: T, unregisterToken?: WeakKey): void {
-        // empty
-    }
+  register(target: WeakKey, heldValue: T, unregisterToken?: WeakKey): void {
+    // empty
+  }
 
-    unregister(unregisterToken: WeakKey): void {
-        // empty
-    }
+  unregister(unregisterToken: WeakKey): boolean {
+    // empty
+    return false;
+  }
 
-    constructor(cleanupCallback: (heldValue: T) => void) {
-        // empty
-        console.log('Mock FinalizationRegistry. you are running in compatibility mode.');
-        console.warn('Mock FinalizationRegistry. you are running in compatibility mode.');
-        console.error('Mock FinalizationRegistry. you are running in compatibility mode.');
-    }
+  constructor(cleanupCallback: (heldValue: T) => void) {
+    // empty
+    console.log("Mock FinalizationRegistry. you are running in compatibility mode.");
+    console.warn("Mock FinalizationRegistry. you are running in compatibility mode.");
+    console.error("Mock FinalizationRegistry. you are running in compatibility mode.");
+  }
 }
-

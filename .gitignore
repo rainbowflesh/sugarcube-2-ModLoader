@@ -18,6 +18,9 @@ label
 !label/type.json5
 !label/.gitkeep
 dist*
+.idea
+.vscode
+.cursor
 
 src/insertTools/**/*.zip
 
@@ -51,3 +54,4 @@ src/insertTools/**/*.zip
 !mod/CheckGameVersionCot
 mod
 
+build
