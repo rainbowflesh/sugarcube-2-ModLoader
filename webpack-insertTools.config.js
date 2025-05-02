@@ -1,36 +1,35 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
-const path = require('path');
+const path = require("path");
 // const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const isProduction = process.env.NODE_ENV == 'production';
-
+const isProduction = process.env.NODE_ENV == "production";
 
 // const stylesHandler = 'style-loader';
 
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
-const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin");
 
 // const ZipPlugin = require('zip-webpack-plugin');
 
 const config = {
   // https://webpack.js.org/configuration/entry-context/#entry
   entry: {
-    packModZip: './src/insertTools/packModZip.ts',
-    insert2html: './src/insertTools/insert2html.ts',
-    "insert2html-polyfill": './src/insertTools/insert2html-polyfill.ts',
-    sc2ReplaceTool: './src/insertTools/sc2ReplaceTool.ts',
-    polyfillInsert: './src/insertTools/polyfillInsert.ts',
+    packModZip: "./src/InsertTools/packModZip.ts",
+    insert2html: "./src/InsertTools/insert2html.ts",
+    "Insert2html-polyfill": "./src/InsertTools/insert2html-polyfill.ts",
+    sc2ReplaceTool: "./src/InsertTools/sc2ReplaceTool.ts",
+    polyfillInsert: "./src/InsertTools/polyfillInsert.ts",
   },
   output: {
-    path: path.resolve(__dirname, 'dist-insertTools'),
-    filename: '[name].js',
+    path: path.resolve(__dirname, "build/dist-InsertTools"),
+    filename: "[name].js",
   },
   // https://webpack.js.org/configuration/devtool/
-  devtool: 'source-map',
+  devtool: "source-map",
   // https://webpack.js.org/configuration/target/
   // target: 'web',
-  target: 'node',
+  target: "node",
 
   // devServer: {
   //   open: true,
@@ -38,7 +37,6 @@ const config = {
   //   port: 3000,
   // },
   plugins: [
-
     //      INFO: generate a html entry from the template
     // new HtmlWebpackPlugin({
     //   template: 'src/web/1.html',
@@ -47,8 +45,8 @@ const config = {
     //      INFO: run Ts Check in parallel, [use special tsconfig]
     new ForkTsCheckerWebpackPlugin({
       typescript: {
-        configFile: 'src/insertTools/tsconfig.json',
-      }
+        configFile: "src/InsertTools/tsconfig.json",
+      },
     }),
 
     // // https://www.npmjs.com/package/zip-webpack-plugin
@@ -78,8 +76,8 @@ const config = {
     rules: [
       {
         test: /\.(ts|tsx)$/i,
-        loader: 'ts-loader',
-        exclude: ['/node_modules/'],
+        loader: "ts-loader",
+        exclude: ["/node_modules/"],
       },
       // {
       //   test: /\.css$/i,
@@ -91,7 +89,7 @@ const config = {
       // },
       {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-        type: 'asset',
+        type: "asset",
       },
 
       // Add your rules for custom modules here
@@ -99,11 +97,13 @@ const config = {
     ],
   },
   resolve: {
-    extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+    extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
     //      INFO: set a special tsconfig if you have multi, otherwise 'ts-loader' will read default from root dir
-    plugins: [new TsconfigPathsPlugin({
-      configFile: 'src/insertTools/tsconfig.json'
-    })],
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: "src/InsertTools/tsconfig.json",
+      }),
+    ],
 
     //      INFO: set some UMD lib to special js file, can skip webpack importer check
     // alias: {
@@ -112,16 +112,14 @@ const config = {
   },
 };
 
-
 module.exports = () => {
   if (isProduction) {
-    config.mode = 'production';
+    config.mode = "production";
 
     //      INFO: add some special config or operate to the config
     config.devtool = undefined;
-
   } else {
-    config.mode = 'development';
+    config.mode = "development";
   }
   return config;
 };

@@ -19,7 +19,7 @@ const config = {
     polyfillWebpack: "./src/BeforeSC2/polyfill.ts",
   },
   output: {
-    path: path.resolve(__dirname, "dist/sugarcube2-modloader/BeforeSC2"),
+    path: path.resolve(__dirname, "build/dist-BeforeSC2"),
     filename: "[name].js",
   },
   // https://webpack.js.org/configuration/devtool/

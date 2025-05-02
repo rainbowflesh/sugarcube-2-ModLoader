@@ -161,7 +161,6 @@ export class SC2DataManager {
 
   /**
    * 0.5.4.x sc2 引擎获取到的 data 与之前不一样, 多了 filepath, 故增加此临时修复方法
-   * TODO: find way to fix sc2 engine
    */
   // @deprecated
   stripFileMap(originalMap: Map<string, any>): Map<string, any> {
@@ -193,9 +192,9 @@ export class SC2DataManager {
     }
 
     const stripedOriginSC2DataInfoCache = this.originSC2DataInfoCache!;
-    if (stripedOriginSC2DataInfoCache.scriptFileItems?.map instanceof Map) {
-      stripedOriginSC2DataInfoCache.scriptFileItems.map = this.stripFileMap(
-        stripedOriginSC2DataInfoCache.scriptFileItems.map
+    if ((stripedOriginSC2DataInfoCache.scriptFileItems as any)?.map instanceof Map) {
+      (stripedOriginSC2DataInfoCache.scriptFileItems as any).map = this.stripFileMap(
+        (stripedOriginSC2DataInfoCache.scriptFileItems as any).map
       );
     }
 
@@ -350,10 +349,10 @@ export class SC2DataManager {
     }
 
     const stripedSC2DataInfoAfterPatchCache = this.cSC2DataInfoAfterPatchCache;
-    if (stripedSC2DataInfoAfterPatchCache.scriptFileItems?.map instanceof Map) {
+    if ((stripedSC2DataInfoAfterPatchCache.scriptFileItems as any)?.map instanceof Map) {
       // @deprecated
-      stripedSC2DataInfoAfterPatchCache.scriptFileItems.map = this.stripFileMap(
-        stripedSC2DataInfoAfterPatchCache.scriptFileItems.map
+      (stripedSC2DataInfoAfterPatchCache.scriptFileItems as any).map = this.stripFileMap(
+        (stripedSC2DataInfoAfterPatchCache.scriptFileItems as any).map
       );
     }
 
@@ -438,7 +437,7 @@ export class SC2DataManager {
 
     // console.log('modSC2DataInfoCache.passageDataItems.items', modSC2DataInfoCache.passageDataItems.items);
 
-    const newPassageDataNode = modSC2DataInfoCache.passageDataItems.items.map((T) => {
+    const newPassageDataNode = (modSC2DataInfoCache.passageDataItems as any).items.map((T: PassageDataItem) => {
       return this.makePassageNode(T);
     });
 
@@ -496,7 +495,7 @@ export class SC2DataManager {
   }
 
   makeStyleNode(sc: SC2DataInfo) {
-    const newStyleNodeContent = sc.styleFileItems.items.reduce((acc, T) => {
+    const newStyleNodeContent = (sc.styleFileItems as any).items.reduce((acc: string, T: any) => {
       return acc + `/* twine-user-stylesheet #${T.id}: "${T.name}" */${T.content}\n`;
     }, "");
     // console.log('makeStyleNode', newStyleNodeContent);
@@ -509,7 +508,7 @@ export class SC2DataManager {
   }
 
   makeScriptNode(sc: SC2DataInfo) {
-    sc.scriptFileItems.items = sc.scriptFileItems.items.sort((a, b) => {
+    (sc.scriptFileItems as any).items = (sc.scriptFileItems as any).items.sort((a: any, b: any) => {
       if (isSafeInteger(a.id) && isSafeInteger(b.id)) {
         if (a.id === 0 || b.id === 0) {
           // o always in last
@@ -541,7 +540,7 @@ export class SC2DataManager {
       }
       return 0;
     });
-    const newScriptNodeContent = sc.scriptFileItems.items.reduce((acc, T) => {
+    const newScriptNodeContent = (sc.scriptFileItems as any).items.reduce((acc: string, T: any) => {
       return acc + `/* twine-user-script #${T.id}: "${T.name}" */${T.content}\n`;
     }, "");
     // console.log('makeScriptNode', newScriptNodeContent);
