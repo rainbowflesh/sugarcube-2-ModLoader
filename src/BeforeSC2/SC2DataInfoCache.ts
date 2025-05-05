@@ -74,6 +74,16 @@ export class CacheRecord<T extends { name: string; content: string }> {
     }
   }
 
+  destroy() {
+    this.items = [];
+    this.map.clear();
+    this.noPathCache?.clear();
+    this.noPathCache = undefined;
+    this.noName = [];
+    this.dataSource = "";
+    this.cacheRecordName = "";
+  }
+
   clean() {
     this.items = [];
     this.map.clear();
@@ -155,6 +165,15 @@ export class CacheRecord<T extends { name: string; content: string }> {
     this.buildNoPathCache();
   }
 
+  public getByNameWithOrWithoutPath(s: string): T | undefined {
+    const o = this.map.get(s);
+    if (o) {
+      return o;
+    }
+    const orgS = this.noPathCache?.get(s) ?? [s];
+    return this.map.get(orgS[0]);
+  }
+
   public getByNameWithNoPath(s: string): T | undefined {
     if (!this.noPathCache) {
       return this.map.get(s);
@@ -179,8 +198,14 @@ export class SC2DataInfo {
   ) {
     // init on there for fix babel https://github.com/babel/babel/issues/13779
     this.styleFileItems = new CacheRecord<StyleTextFileItem>(this.log, this.dataSource, "styleFileItems");
-    this.scriptFileItems = new CacheRecord<ScriptTextFileItem>(this.log, this.dataSource, "scriptFileItems");
+    this.scriptFileItems = new CacheRecord<ScriptTextFileItem>(this.log, this.dataSource, "scriptFileItems", true);
     this.passageDataItems = new CacheRecord<PassageDataItem>(this.log, this.dataSource, "passageDataItems");
+  }
+
+  destroy() {
+    this.styleFileItems.destroy();
+    this.scriptFileItems.destroy();
+    this.passageDataItems.destroy();
   }
 
   clean() {
@@ -189,6 +214,10 @@ export class SC2DataInfo {
 }
 
 export class SC2DataInfoCache extends SC2DataInfo {
+  destroy() {
+    super.destroy();
+  }
+
   cloneSC2DataInfo() {
     const r = new SC2DataInfo(this.log, this.dataSource);
     r.styleFileItems = cloneDeep(this.styleFileItems);
@@ -237,9 +266,7 @@ export class SC2DataInfoCache extends SC2DataInfo {
         }
         ++i;
       }
-      // console.log('this.scriptFileItems.items sn.innerText', scl, [sn.innerText], this.scriptFileItems.items.length)
     }
-    // console.log('this.scriptFileItems.items', this.scriptFileItems.items.length);
     this.scriptFileItems.fillMap();
 
     for (const passageDataNode of passageDataNodes) {
