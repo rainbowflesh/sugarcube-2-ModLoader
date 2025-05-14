@@ -1,4 +1,4 @@
-import 'core-js';
-import * as $ from 'jquery';
+import "core-js/full";
+import * as $ from "jquery";
 
 window.jQuery = window.$ = $;
